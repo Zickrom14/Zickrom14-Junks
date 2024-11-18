@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <h2>Write Message</h2>
+  <form id="messageForm" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="d-flex justify-content-between mt-3">
+      <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+      <button type="submit" name="send" class="btn btn-success" id="sendBtn">Send</button>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+      const content = document.getElementById('id_content').value;
+
+      if (content.trim()) {  // Check if there’s content in the form
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("{% url 'write_message' %}", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams({
+            content: content,
+            save_draft: '1'
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = "{% url 'home' %}";  // Redirect to home after saving
+          }
+        });
+      } else {
+        window.location.href = "{% url 'home' %}";  // Redirect to home directly if no content
+      }
+    });
+  </script>
+{% endblock %}
