@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messenger App</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'messenger/styles.css' %}"> <!-- custom css -->
+</head>
+
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary"> <!-- navigation bar -->
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">Home</a> <!-- navbar home -->
+
+      <div class="navbar-nav"> <!-- additional links -->
+        <a class="nav-link text-white ml-3" href="{% url 'about' %}">About Us</a> <!-- link to About Us page -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- main content area -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <!-- main column for content -->
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <!-- content block to be replaced by individual page content -->
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bootstrap modal confirm action -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- modal header -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Confirm Action</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- modal body for message confirmation-->
+        <div class="modal-body">
+          Are you sure you want to delete this item?
+        </div>
+
+        <!-- modal footer for action buttons -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <!-- link for delete action -->
+          <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for modal behavior -->
+  <!-- include jQuery and bootstrap JS bundle -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () { // wait for the DOM to fully load
+      const confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); // confirm delete button in the modal
+      document.querySelectorAll('[data-toggle="modal"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {  // add event listeners to buttons triggering the modal
+          const targetUrl = btn.getAttribute('data-url'); // get the URL to confirm deletion from the button data-url attribute
+          confirmDeleteBtn.setAttribute('href', targetUrl); // modal confirm button to navigate to the delete URL
+        });
+      });
+    });
+  </script>
+</body>
+</html>

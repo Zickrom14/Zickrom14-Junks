@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  <h1>Start Messaging</h1>
+
+  <br>
+
+  <!-- centers the buttons horizontally on the page -->
+  <div class="text-center">
+    <p></p>
+    <a href="{% url 'write_message' %}" class="btn btn-primary">Write Message</a> <!-- write message button -->
+    <a href="{% url 'sent_messages' %}" class="btn btn-secondary">View Sent Messages</a> <!-- sent messages button -->
+    <a href="{% url 'draft_messages' %}" class="btn btn-warning">Draft Messages</a> <!-- draft messages button -->
+  </div>
+{% endblock %}

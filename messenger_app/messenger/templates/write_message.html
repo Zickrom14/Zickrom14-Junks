@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <!-- page heading -->
+  <h2>Write something...</h2>
+
+  <!-- form for writing a new message -->
+  <form id="messageForm" method="post">
+    {% csrf_token %}
+    {{ form|crispy }} <!-- render the form using Django Crispy Forms for styling -->
+
+    <!-- buttons: 'Back' to save as draft and go back, 'Send' to submit the form -->
+    <div class="d-flex justify-content-between mt-3">
+      <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+      <button type="submit" name="send" class="btn btn-success" id="sendBtn">Send</button>
+    </div>
+  </form>
+
+  <!-- JavaScript to handle the 'Back' button functionality -->
+  <script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+      const content = document.getElementById('id_content').value; // get the content of the message input field
+
+      if (content.trim()) {  // checks if there is any content in the form before proceeding
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; // retrieve the CSRF token for secure POST requests
+
+        fetch("{% url 'write_message' %}", { // send a POST request to save the draft
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded', // define the content type
+            'X-CSRFToken': csrfToken // include CSRF token for Django validation
+          },
+          body: new URLSearchParams({
+            content: content, // send the message content
+            save_draft: '1' // indicate this is a save draft request
+          })
+        })
+        .then(response => response.json()) // parse the JSON response
+        .then(data => {
+          if (data.success) { // if draft saved successfully, redirect to home page
+            window.location.href = "{% url 'home' %}";  // redirect to home after saving
+          }
+        });
+      } else {
+        window.location.href = "{% url 'home' %}";  // redirect to home directly if no content
+      }
+    });
+  </script>
+{% endblock %}

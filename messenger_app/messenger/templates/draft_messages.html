@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  <!-- page title -->
+  <h2 class="mb-4">Draft Messages</h2>
+
+  <!-- display draft messages in a list group -->
+  <ul class="list-group">
+    {% for draft in drafts %}
+      <!-- each draft is displayed as a list group item with box for layout -->
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <!-- display the content of the draft -->
+        <span>{{ draft.content }}</span>
+
+        <!-- buttons for editing and deleting drafts -->
+        <div>
+          <!-- button to edit draft, linked to edit draft view -->
+          <a href="{% url 'edit_draft' draft.id %}" class="btn btn-primary btn-sm mr-2">Edit</a>
+          <!-- button to delete draft, triggers a bootstrap modal for confirmation -->
+          <button 
+            class="btn btn-danger btn-sm" 
+            data-toggle="modal" 
+            data-target="#confirmModal" 
+            data-url="{% url 'delete_draft' draft.id %}">
+            Delete
+          </button>
+        </div>
+      </li>
+    {% empty %}
+      <!-- message displayed if no drafts are available -->
+      <p class="text-muted">No draft messages.</p>
+    {% endfor %}
+  </ul>
+  <!-- back button -->
+  <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Back to Home</a>
+{% endblock %}
